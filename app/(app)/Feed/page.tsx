@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { BottomNav } from '../../../Components/BottomNav'
 
 async function getSupabaseClient() {
   const cookieStore = await cookies()
@@ -29,7 +30,7 @@ async function getFeedLogs() {
   
   const { data: { user } } = await supabase.auth.getUser()
   
-  if (!user) return { data: null, error: 'Not authenticated' }
+  if (!user) return { data: null }
 
   const { data: follows } = await supabase
     .from('follows')
@@ -39,10 +40,10 @@ async function getFeedLogs() {
   const followingIds = follows?.map(f => f.following_id) || []
 
   if (followingIds.length === 0) {
-    return { data: [], error: null }
+    return { data: [] }
   }
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('logs')
     .select(`
       *,
@@ -56,7 +57,7 @@ async function getFeedLogs() {
     .eq('is_shared', true)
     .order('created_at', { ascending: false })
 
-  return { data, error }
+  return { data }
 }
 
 function LogCard({ log, showAuthor }: any) {
@@ -125,18 +126,12 @@ function LogCard({ log, showAuthor }: any) {
 }
 
 export default async function FeedPage() {
-  const { data: logs, error } = await getFeedLogs()
+  const { data: logs } = await getFeedLogs()
 
   return (
-    <div className="pb-20">
-      <div className="max-w-2xl mx-auto px-4 py-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Feed</h1>
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
-            {error}
-          </div>
-        )}
 
         {!logs || logs.length === 0 ? (
           <div className="text-center py-12">
@@ -166,6 +161,7 @@ export default async function FeedPage() {
           </div>
         )}
       </div>
+      <BottomNav />
     </div>
   )
 }
