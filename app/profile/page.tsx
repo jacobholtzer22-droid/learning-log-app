@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
-import { BottomNav } from '../../Components/BottomNav'
+import Link from 'next/link'
 
 function Button({ children, variant = 'primary', ...props }: any) {
   const variants = {
@@ -24,6 +24,7 @@ function Button({ children, variant = 'primary', ...props }: any) {
 export default function ProfilePage() {
   const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
+  const [stats, setStats] = useState({ followers: 0, following: 0, logs: 0 })
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   
@@ -46,6 +47,30 @@ export default function ProfilePage() {
           .single()
         
         setProfile(profile)
+
+        // Get follower count
+        const { count: followers } = await supabase
+          .from('follows')
+          .select('*', { count: 'exact', head: true })
+          .eq('following_id', user.id)
+
+        // Get following count
+        const { count: following } = await supabase
+          .from('follows')
+          .select('*', { count: 'exact', head: true })
+          .eq('follower_id', user.id)
+
+        // Get log count
+        const { count: logs } = await supabase
+          .from('logs')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+
+        setStats({
+          followers: followers || 0,
+          following: following || 0,
+          logs: logs || 0,
+        })
       }
       
       setLoading(false)
@@ -89,6 +114,23 @@ export default function ProfilePage() {
             <label className="text-sm font-medium text-gray-500">Email</label>
             <p className="text-lg text-gray-900">{user?.email}</p>
           </div>
+
+          <div className="border-t pt-4 mt-4">
+            <div className="flex gap-6 text-sm">
+              <div>
+                <span className="font-semibold text-gray-900">{stats.followers}</span>
+                <span className="text-gray-600 ml-1">Followers</span>
+              </div>
+              <Link href="/following" className="hover:text-blue-600">
+                <span className="font-semibold text-gray-900">{stats.following}</span>
+                <span className="text-gray-600 ml-1">Following</span>
+              </Link>
+              <div>
+                <span className="font-semibold text-gray-900">{stats.logs}</span>
+                <span className="text-gray-600 ml-1">Total Logs</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-3">
@@ -125,7 +167,6 @@ export default function ProfilePage() {
           </Button>
         </div>
       </div>
-      <BottomNav />
     </div>
   )
 }
