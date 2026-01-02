@@ -3,6 +3,8 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { BottomNav } from '../../Components/BottomNav'
 import { DeleteLogButton } from '../../Components/DeleteLogButton'
+import { ReactionButton } from '../../Components/ReactionButton'
+import { CommentSection } from '../../Components/CommentSection'
 
 async function getSupabaseClient() {
   const cookieStore = await cookies()
@@ -145,9 +147,13 @@ export default async function LibraryPage() {
                 </div>
 
                 <div className="pt-2 border-t border-gray-100">
-                  <p className="text-xs text-gray-400">
-                    Logged {formatDate(log.created_at)}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-400">
+                      Logged {formatDate(log.created_at)}
+                    </p>
+                    <ReactionButton logId={log.id} />
+                  </div>
+                  <CommentSection logId={log.id} />
                 </div>
               </div>
             ))}

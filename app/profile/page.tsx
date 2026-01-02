@@ -147,6 +147,19 @@ export default function ProfilePage() {
 
         <div className="space-y-3">
           <div className="bg-lime-50 border border-lime-200 rounded-lg p-4">
+            <h3 className="font-medium text-amber-800 mb-1">Import Your Data</h3>
+            <p className="text-sm text-amber-700 mb-3">
+              Import from another source (Excel, Goodreads, etc.)
+            </p>
+            <Button
+              variant="secondary"
+              onClick={() => router.push('/import')}
+            >
+              Import Data
+            </Button>
+          </div>
+
+          <div className="bg-lime-50 border border-lime-200 rounded-lg p-4">
             <h3 className="font-medium text-amber-800 mb-1">Export Your Data</h3>
             <p className="text-sm text-amber-700 mb-3">
               Download all your learning logs as JSON
