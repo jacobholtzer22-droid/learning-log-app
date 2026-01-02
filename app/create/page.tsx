@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
 import { BottomNav } from '../../Components/BottomNav'
+import { Spinner } from '../../Components/Spinner'
 
 function Button({ children, type = 'button', variant = 'primary', ...props }: any) {
   const baseStyles = 'font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
   const variantStyles = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 px-6 py-3',
+    primary: 'bg-lime-600 text-white hover:bg-lime-700 active:bg-lime-800 px-6 py-3',
     secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 active:bg-gray-400 px-6 py-3',
   }
   
@@ -32,7 +33,7 @@ function Input({ label, ...props }: any) {
         </label>
       )}
       <input
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none transition"
         {...props}
       />
     </div>
@@ -48,7 +49,7 @@ function Textarea({ label, ...props }: any) {
         </label>
       )}
       <textarea
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none transition resize-none"
         {...props}
       />
     </div>
@@ -112,9 +113,9 @@ export default function CreatePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Create Learning Log</h1>
+        <h1 className="text-2xl font-bold text-amber-800 mb-6">Create Learning Log</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-lime-200 shadow-sm">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               What did you learn from?
@@ -122,7 +123,7 @@ export default function CreatePage() {
             <select
               value={formData.contentType}
               onChange={(e) => setFormData({ ...formData, contentType: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none"
             >
               <option value="book">Book</option>
               <option value="podcast">Podcast</option>
@@ -191,7 +192,7 @@ export default function CreatePage() {
               id="isShared"
               checked={formData.isShared}
               onChange={(e) => setFormData({ ...formData, isShared: e.target.checked })}
-              className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+              className="w-5 h-5 text-lime-600 rounded focus:ring-2 focus:ring-lime-500"
             />
             <label htmlFor="isShared" className="text-sm font-medium text-gray-700">
               Share with friends
@@ -209,14 +210,23 @@ export default function CreatePage() {
               type="button"
               variant="secondary"
               onClick={() => router.back()}
+              disabled={loading}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={loading}
+              className="flex-1 flex items-center justify-center gap-2"
             >
-              {loading ? 'Saving...' : 'Save Log'}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <Spinner size="sm" />
+                  Saving...
+                </span>
+              ) : (
+                'Save Log'
+              )}
             </Button>
           </div>
         </form>

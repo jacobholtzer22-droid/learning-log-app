@@ -4,10 +4,14 @@ import { useEffect, useState } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
+import { BottomNav } from '../../Components/BottomNav'
+import { Spinner } from '../../Components/Spinner'
+import { useToast } from '../../Components/Toast'
 
 function Button({ children, variant = 'primary', ...props }: any) {
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
+    primary: 'bg-lime-600 text-white hover:bg-lime-700',
     secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
   }
   
@@ -27,6 +31,7 @@ export default function ProfilePage() {
   const [stats, setStats] = useState({ followers: 0, following: 0, logs: 0 })
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const { showToast } = useToast()
   
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -48,19 +53,16 @@ export default function ProfilePage() {
         
         setProfile(profile)
 
-        // Get follower count
         const { count: followers } = await supabase
           .from('follows')
           .select('*', { count: 'exact', head: true })
           .eq('following_id', user.id)
 
-        // Get following count
         const { count: following } = await supabase
           .from('follows')
           .select('*', { count: 'exact', head: true })
           .eq('follower_id', user.id)
 
-        // Get log count
         const { count: logs } = await supabase
           .from('logs')
           .select('*', { count: 'exact', head: true })
@@ -81,13 +83,15 @@ export default function ProfilePage() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
+    showToast('Signed out')
     router.push('/login')
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-500">Loading...</div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+        <Spinner size="lg" />
+        <p className="mt-4 text-amber-700">Loading...</p>
       </div>
     )
   }
@@ -95,9 +99,17 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile</h1>
+        <div className="flex items-center gap-3 mb-6">
+          <Image
+            src="/logo.png"
+            alt="LearningLogs"
+            width={40}
+            height={40}
+          />
+          <h1 className="text-2xl font-bold text-amber-800">Profile</h1>
+        </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 mb-6">
+        <div className="bg-white rounded-lg border border-lime-200 p-6 space-y-4 mb-6">
           <div>
             <label className="text-sm font-medium text-gray-500">Username</label>
             <p className="text-lg text-gray-900">@{profile?.username || 'N/A'}</p>
@@ -117,11 +129,11 @@ export default function ProfilePage() {
 
           <div className="border-t pt-4 mt-4">
             <div className="flex gap-6 text-sm">
-              <div>
+              <Link href="/following" className="hover:text-lime-600">
                 <span className="font-semibold text-gray-900">{stats.followers}</span>
                 <span className="text-gray-600 ml-1">Followers</span>
-              </div>
-              <Link href="/following" className="hover:text-blue-600">
+              </Link>
+              <Link href="/following" className="hover:text-lime-600">
                 <span className="font-semibold text-gray-900">{stats.following}</span>
                 <span className="text-gray-600 ml-1">Following</span>
               </Link>
@@ -134,9 +146,9 @@ export default function ProfilePage() {
         </div>
 
         <div className="space-y-3">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-medium text-blue-900 mb-1">Export Your Data</h3>
-            <p className="text-sm text-blue-700 mb-3">
+          <div className="bg-lime-50 border border-lime-200 rounded-lg p-4">
+            <h3 className="font-medium text-amber-800 mb-1">Export Your Data</h3>
+            <p className="text-sm text-amber-700 mb-3">
               Download all your learning logs as JSON
             </p>
             <Button
@@ -153,6 +165,7 @@ export default function ProfilePage() {
                 a.href = url
                 a.download = `learning-logs-${new Date().toISOString()}.json`
                 a.click()
+                showToast('Data exported!')
               }}
             >
               Export Data
@@ -167,6 +180,7 @@ export default function ProfilePage() {
           </Button>
         </div>
       </div>
+      <BottomNav />
     </div>
   )
 }

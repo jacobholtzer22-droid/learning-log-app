@@ -1,6 +1,9 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import Link from 'next/link'
 import { BottomNav } from '../../Components/BottomNav'
+import { ReactionButton } from '../../Components/ReactionButton'
+import { CommentSection } from '../../Components/CommentSection'
 
 async function getSupabaseClient() {
   const cookieStore = await cookies()
@@ -60,69 +63,18 @@ async function getFeedLogs() {
   return { data, error }
 }
 
-function LogCard({ log, showAuthor }: any) {
-  const contentTypeColors: Record<string, string> = {
-    book: 'bg-purple-100 text-purple-800',
-    podcast: 'bg-green-100 text-green-800',
-    article: 'bg-blue-100 text-blue-800',
-    course: 'bg-orange-100 text-orange-800',
-    video: 'bg-red-100 text-red-800',
-    other: 'bg-gray-100 text-gray-800',
-  }
+const contentTypeColors: Record<string, string> = {
+  book: 'bg-purple-100 text-purple-800',
+  podcast: 'bg-green-100 text-green-800',
+  article: 'bg-blue-100 text-blue-800',
+  course: 'bg-orange-100 text-orange-800',
+  video: 'bg-red-100 text-red-800',
+  other: 'bg-gray-100 text-gray-800',
+}
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-  }
-
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 space-y-3">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className={`text-xs px-2 py-1 rounded-full font-medium ${contentTypeColors[log.content_type]}`}>
-              {log.content_type}
-            </span>
-            <span className="text-xs text-gray-500">
-              {formatDate(log.consumed_date)}
-            </span>
-          </div>
-          <h3 className="font-semibold text-lg text-gray-900">{log.title}</h3>
-          {log.creator && (
-            <p className="text-sm text-gray-600">by {log.creator}</p>
-          )}
-          {showAuthor && log.profiles && (
-            <p className="text-sm text-gray-500 mt-1">
-              @{log.profiles.username}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="space-y-3 text-sm">
-        <div>
-          <p className="font-medium text-gray-700 mb-1">Key Points:</p>
-          <p className="text-gray-600 whitespace-pre-wrap">{log.key_points}</p>
-        </div>
-
-        <div>
-          <p className="font-medium text-gray-700 mb-1">How I'll Use This:</p>
-          <p className="text-gray-600 whitespace-pre-wrap">{log.practical_application}</p>
-        </div>
-
-        <div>
-          <p className="font-medium text-gray-700 mb-1">Summary:</p>
-          <p className="text-gray-600 whitespace-pre-wrap">{log.summary}</p>
-        </div>
-      </div>
-
-      <div className="pt-2 border-t border-gray-100">
-        <p className="text-xs text-gray-400">
-          Logged {formatDate(log.created_at)}
-        </p>
-      </div>
-    </div>
-  )
+function formatDate(dateString: string) {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 export default async function FeedPage() {
@@ -131,12 +83,12 @@ export default async function FeedPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Feed</h1>
+        <h1 className="text-2xl font-bold text-amber-800 mb-6">Feed</h1>
 
         {!logs || logs.length === 0 ? (
           <div className="text-center py-12">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="mx-auto h-12 w-12 text-amber-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -155,9 +107,61 @@ export default async function FeedPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {Array.isArray(logs) && logs.map((log: any) => {
-              return <LogCard key={log.id} log={log} showAuthor={true} />
-            })}
+            {Array.isArray(logs) && logs.map((log: any) => (
+              <div key={log.id} className="bg-white rounded-lg border border-lime-200 shadow-sm p-4 space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${contentTypeColors[log.content_type]}`}>
+                        {log.content_type}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {formatDate(log.consumed_date)}
+                      </span>
+                    </div>
+                    <h3 className="font-semibold text-lg text-gray-900">{log.title}</h3>
+                    {log.creator && (
+                      <p className="text-sm text-gray-600">by {log.creator}</p>
+                    )}
+                    {log.profiles && (
+                      <Link 
+                        href={`/user/${log.profiles.username}`}
+                        className="text-sm text-lime-600 hover:text-lime-700 mt-1 inline-block"
+                      >
+                        @{log.profiles.username}
+                      </Link>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="font-medium text-gray-700 mb-1">Key Points:</p>
+                    <p className="text-gray-600 whitespace-pre-wrap">{log.key_points}</p>
+                  </div>
+
+                  <div>
+                    <p className="font-medium text-gray-700 mb-1">How I'll Use This:</p>
+                    <p className="text-gray-600 whitespace-pre-wrap">{log.practical_application}</p>
+                  </div>
+
+                  <div>
+                    <p className="font-medium text-gray-700 mb-1">Summary:</p>
+                    <p className="text-gray-600 whitespace-pre-wrap">{log.summary}</p>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-400">
+                      Logged {formatDate(log.created_at)}
+                    </p>
+                    <ReactionButton logId={log.id} />
+                  </div>
+                  <CommentSection logId={log.id} />
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

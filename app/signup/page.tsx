@@ -1,14 +1,15 @@
- 'use client'
+'use client'
 
 import { useState } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function Button({ children, ...props }: any) {
   return (
     <button
-      className="w-full px-6 py-3 text-lg font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800"
+      className="w-full px-6 py-3 text-lg font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-lime-600 text-white hover:bg-lime-700 active:bg-lime-800"
       {...props}
     >
       {children}
@@ -25,7 +26,7 @@ function Input({ label, error, ...props }: any) {
         </label>
       )}
       <input
-        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition ${
+        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none transition ${
           error ? 'border-red-500' : 'border-gray-300'
         }`}
         {...props}
@@ -78,14 +79,23 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-lime-50 px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900">Learning Log</h1>
-          <p className="mt-2 text-gray-600">Create your account</p>
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/logo.png"
+              alt="LearningLogs"
+              width={100}
+              height={100}
+              priority
+            />
+          </div>
+          <h1 className="text-4xl font-bold text-amber-800">LearningLogs</h1>
+          <p className="mt-2 text-amber-700">Create your account</p>
         </div>
 
-        <form onSubmit={handleSignup} className="mt-8 space-y-6">
+        <form onSubmit={handleSignup} className="mt-8 space-y-6 bg-white p-6 rounded-xl shadow-sm border border-lime-200">
           <div className="space-y-4">
             <Input
               label="Username"
@@ -137,7 +147,7 @@ export default function SignupPage() {
 
           <p className="text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+            <Link href="/login" className="text-lime-600 hover:text-lime-700 font-medium">
               Sign in
             </Link>
           </p>

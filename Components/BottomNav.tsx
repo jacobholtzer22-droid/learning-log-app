@@ -14,7 +14,7 @@ export function BottomNav() {
         <Link 
           href="/feed"
           className={`flex flex-col items-center justify-center flex-1 h-full ${
-            isActive('/feed') ? 'text-blue-600' : 'text-gray-600'
+            isActive('/feed') ? 'text-lime-600' : 'text-gray-600'
           }`}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,7 +26,7 @@ export function BottomNav() {
         <Link 
           href="/search"
           className={`flex flex-col items-center justify-center flex-1 h-full ${
-            isActive('/search') ? 'text-blue-600' : 'text-gray-600'
+            isActive('/search') ? 'text-lime-600' : 'text-gray-600'
           }`}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +38,7 @@ export function BottomNav() {
         <Link 
           href="/create"
           className={`flex flex-col items-center justify-center flex-1 h-full ${
-            isActive('/create') ? 'text-blue-600' : 'text-gray-600'
+            isActive('/create') ? 'text-lime-600' : 'text-gray-600'
           }`}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@ export function BottomNav() {
         <Link 
           href="/library"
           className={`flex flex-col items-center justify-center flex-1 h-full ${
-            isActive('/library') ? 'text-blue-600' : 'text-gray-600'
+            isActive('/library') ? 'text-lime-600' : 'text-gray-600'
           }`}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,7 +62,7 @@ export function BottomNav() {
         <Link 
           href="/profile"
           className={`flex flex-col items-center justify-center flex-1 h-full ${
-            isActive('/profile') ? 'text-blue-600' : 'text-gray-600'
+            isActive('/profile') ? 'text-lime-600' : 'text-gray-600'
           }`}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

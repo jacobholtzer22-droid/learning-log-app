@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { BottomNav } from '../../Components/BottomNav'
+import { DeleteLogButton } from '../../Components/DeleteLogButton'
 
 async function getSupabaseClient() {
   const cookieStore = await cookies()
@@ -42,69 +43,18 @@ async function getUserLogs() {
   return { data, error }
 }
 
-function LogCard({ log }: any) {
-  const contentTypeColors: Record<string, string> = {
-    book: 'bg-purple-100 text-purple-800',
-    podcast: 'bg-green-100 text-green-800',
-    article: 'bg-blue-100 text-blue-800',
-    course: 'bg-orange-100 text-orange-800',
-    video: 'bg-red-100 text-red-800',
-    other: 'bg-gray-100 text-gray-800',
-  }
+const contentTypeColors: Record<string, string> = {
+  book: 'bg-purple-100 text-purple-800',
+  podcast: 'bg-green-100 text-green-800',
+  article: 'bg-blue-100 text-blue-800',
+  course: 'bg-orange-100 text-orange-800',
+  video: 'bg-red-100 text-red-800',
+  other: 'bg-gray-100 text-gray-800',
+}
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-  }
-
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 space-y-3">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className={`text-xs px-2 py-1 rounded-full font-medium ${contentTypeColors[log.content_type]}`}>
-              {log.content_type}
-            </span>
-            <span className="text-xs text-gray-500">
-              {formatDate(log.consumed_date)}
-            </span>
-            {log.is_shared && (
-              <span className="text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-700">
-                Shared
-              </span>
-            )}
-          </div>
-          <h3 className="font-semibold text-lg text-gray-900">{log.title}</h3>
-          {log.creator && (
-            <p className="text-sm text-gray-600">by {log.creator}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="space-y-3 text-sm">
-        <div>
-          <p className="font-medium text-gray-700 mb-1">Key Points:</p>
-          <p className="text-gray-600 whitespace-pre-wrap">{log.key_points}</p>
-        </div>
-
-        <div>
-          <p className="font-medium text-gray-700 mb-1">How I'll Use This:</p>
-          <p className="text-gray-600 whitespace-pre-wrap">{log.practical_application}</p>
-        </div>
-
-        <div>
-          <p className="font-medium text-gray-700 mb-1">Summary:</p>
-          <p className="text-gray-600 whitespace-pre-wrap">{log.summary}</p>
-        </div>
-      </div>
-
-      <div className="pt-2 border-t border-gray-100">
-        <p className="text-xs text-gray-400">
-          Logged {formatDate(log.created_at)}
-        </p>
-      </div>
-    </div>
-  )
+function formatDate(dateString: string) {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 export default async function LibraryPage() {
@@ -114,10 +64,10 @@ export default async function LibraryPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">My Library</h1>
+          <h1 className="text-2xl font-bold text-amber-800">My Library</h1>
           <Link 
             href="/create"
-            className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+            className="text-lime-600 hover:text-lime-700 font-medium text-sm"
           >
             + New Log
           </Link>
@@ -126,7 +76,7 @@ export default async function LibraryPage() {
         {!logs || logs.length === 0 ? (
           <div className="text-center py-12">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="mx-auto h-12 w-12 text-amber-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -144,7 +94,7 @@ export default async function LibraryPage() {
             </p>
             <div className="mt-6">
               <Link href="/create">
-                <button className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                <button className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-lime-600 hover:bg-lime-700">
                   Create Your First Log
                 </button>
               </Link>
@@ -153,7 +103,53 @@ export default async function LibraryPage() {
         ) : (
           <div className="space-y-4">
             {logs.map((log: any) => (
-              <LogCard key={log.id} log={log} />
+              <div key={log.id} className="bg-white rounded-lg border border-lime-200 shadow-sm p-4 space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${contentTypeColors[log.content_type]}`}>
+                        {log.content_type}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {formatDate(log.consumed_date)}
+                      </span>
+                      {log.is_shared && (
+                        <span className="text-xs px-2 py-1 rounded-full bg-lime-50 text-lime-700">
+                          Shared
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-semibold text-lg text-gray-900">{log.title}</h3>
+                    {log.creator && (
+                      <p className="text-sm text-gray-600">by {log.creator}</p>
+                    )}
+                  </div>
+                  <DeleteLogButton logId={log.id} />
+                </div>
+
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="font-medium text-gray-700 mb-1">Key Points:</p>
+                    <p className="text-gray-600 whitespace-pre-wrap">{log.key_points}</p>
+                  </div>
+
+                  <div>
+                    <p className="font-medium text-gray-700 mb-1">How I'll Use This:</p>
+                    <p className="text-gray-600 whitespace-pre-wrap">{log.practical_application}</p>
+                  </div>
+
+                  <div>
+                    <p className="font-medium text-gray-700 mb-1">Summary:</p>
+                    <p className="text-gray-600 whitespace-pre-wrap">{log.summary}</p>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-gray-100">
+                  <p className="text-xs text-gray-400">
+                    Logged {formatDate(log.created_at)}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         )}

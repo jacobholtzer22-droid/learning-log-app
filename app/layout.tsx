@@ -1,24 +1,27 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { ToastProvider } from '../Components/Toast'
+import { LoadingScreen } from '../Components/LoadingScreen'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Learning Log',
+  title: 'LearningLogs',
   description: 'Track and reflect on what you learn',
   manifest: '/manifest.json',
-  themeColor: '#2563eb',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Learning Log',
+    title: 'LearningLogs',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#84cc16',
 }
 
 export default function RootLayout({
@@ -29,9 +32,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
+        <link rel="icon" href="/logo.png" />
       </head>
-      <body className={`${inter.className} bg-gray-50`}>{children}</body>
+      <body className={`${inter.className} bg-gray-50`}>
+        <ToastProvider>
+          <LoadingScreen />
+          {children}
+        </ToastProvider>
+      </body>
     </html>
   )
 }
