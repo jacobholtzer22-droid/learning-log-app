@@ -46,7 +46,7 @@ export default function SearchPage() {
     const { data } = await supabase
       .from('profiles')
       .select('*')
-      .ilike('username', `%${searchQuery}%`)
+      .or(`username.ilike.%${searchQuery}%,full_name.ilike.%${searchQuery}%`)
       .limit(20)
     
     setUsers(data || [])
@@ -102,7 +102,7 @@ export default function SearchPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && searchUsers()}
-              placeholder="Search by username..."
+              placeholder="Search by username or name..."
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none text-gray-900 placeholder-gray-500"
             />
             <button

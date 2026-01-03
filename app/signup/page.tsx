@@ -39,9 +39,12 @@ function Input({ label, error, ...props }: any) {
 export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [fullName, setFullName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [error, setError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
@@ -53,9 +56,25 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setPasswordError('')
     setLoading(true)
 
+    // Validate password match
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match')
+      setLoading(false)
+      return
+    }
+
+    // Validate required fields
+    if (!firstName.trim() || !lastName.trim()) {
+      setError('First name and last name are required')
+      setLoading(false)
+      return
+    }
+
     try {
+      const fullName = `${firstName.trim()} ${lastName.trim()}`
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -69,8 +88,8 @@ export default function SignupPage() {
 
       if (error) throw error
 
-      router.push('/feed')
-      router.refresh()
+      // Redirect to check email page with email parameter
+      router.push(`/check-email?email=${encodeURIComponent(email)}`)
     } catch (err: any) {
       setError(err.message || 'Failed to sign up')
     } finally {
@@ -108,11 +127,21 @@ export default function SignupPage() {
             />
 
             <Input
-              label="Full Name (optional)"
+              label="First Name"
               type="text"
-              value={fullName}
-              onChange={(e: any) => setFullName(e.target.value)}
-              placeholder="John Doe"
+              value={firstName}
+              onChange={(e: any) => setFirstName(e.target.value)}
+              placeholder="John"
+              required
+            />
+
+            <Input
+              label="Last Name"
+              type="text"
+              value={lastName}
+              onChange={(e: any) => setLastName(e.target.value)}
+              placeholder="Doe"
+              required
             />
 
             <Input
@@ -132,6 +161,20 @@ export default function SignupPage() {
               placeholder="••••••••"
               required
               minLength={6}
+            />
+
+            <Input
+              label="Confirm Password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e: any) => {
+                setConfirmPassword(e.target.value)
+                if (passwordError) setPasswordError('')
+              }}
+              placeholder="••••••••"
+              required
+              minLength={6}
+              error={passwordError}
             />
           </div>
 
