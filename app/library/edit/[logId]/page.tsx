@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useParams } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
-import { BottomNav } from '../../Components/BottomNav'
-import { Spinner } from '../../Components/Spinner'
+import { BottomNav } from '../../../../Components/BottomNav'
+import { Spinner } from '../../../../Components/Spinner'
 
 function Button({ children, type = 'button', variant = 'primary', ...props }: any) {
   const baseStyles = 'font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
@@ -56,11 +56,14 @@ function Textarea({ label, className, ...props }: any) {
   )
 }
 
-export default function CreatePage() {
+export default function EditLogPage() {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const params = useParams()
+  const logId = params.logId as string
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-
+  
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -70,7 +73,7 @@ export default function CreatePage() {
     contentType: 'book',
     title: '',
     creator: '',
-    consumedDate: new Date().toISOString().split('T')[0],
+    consumedDate: '',
     keyPoints: '',
     practicalApplication: '',
     summary: '',
@@ -80,46 +83,103 @@ export default function CreatePage() {
     progressTotal: '',
   })
 
+  useEffect(() => {
+    async function loadLog() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          router.push('/login')
+          return
+        }
+
+        const { data: log, error: fetchError } = await supabase
+          .from('logs')
+          .select('*')
+          .eq('id', logId)
+          .eq('user_id', user.id)
+          .single()
+
+        if (fetchError || !log) {
+          setError('Log not found or you do not have permission to edit it')
+          return
+        }
+
+        setFormData({
+          contentType: log.content_type || 'book',
+          title: log.title || '',
+          creator: log.creator || '',
+          consumedDate: log.consumed_date ? new Date(log.consumed_date).toISOString().split('T')[0] : '',
+          keyPoints: log.key_points || '',
+          practicalApplication: log.practical_application || '',
+          summary: log.summary || '',
+          isShared: log.is_shared || false,
+          isInProgress: log.is_in_progress || false,
+          progressCurrent: log.progress_current ? String(log.progress_current) : '',
+          progressTotal: log.progress_total ? String(log.progress_total) : '',
+        })
+      } catch (err: any) {
+        setError(err.message || 'Failed to load log')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (logId) {
+      loadLog()
+    }
+  }, [logId, router, supabase])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    setLoading(true)
+    setSaving(true)
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
       
       if (!user) throw new Error('Not authenticated')
 
-      const { error } = await supabase.from('logs').insert({
-        user_id: user.id,
-        content_type: formData.contentType,
-        title: formData.title,
-        creator: formData.creator || null,
-        consumed_date: formData.consumedDate,
-        key_points: formData.keyPoints || null,
-        practical_application: formData.practicalApplication || null,
-        summary: formData.summary,
-        is_shared: formData.isShared,
-        is_in_progress: formData.isInProgress,
-        progress_current: formData.progressCurrent ? parseFloat(formData.progressCurrent) : null,
-        progress_total: formData.progressTotal ? parseFloat(formData.progressTotal) : null,
-      })
+      const { error: updateError } = await supabase
+        .from('logs')
+        .update({
+          content_type: formData.contentType,
+          title: formData.title,
+          creator: formData.creator || null,
+          consumed_date: formData.consumedDate,
+          key_points: formData.keyPoints || null,
+          practical_application: formData.practicalApplication || null,
+          summary: formData.summary,
+          is_shared: formData.isShared,
+          is_in_progress: formData.isInProgress,
+          progress_current: formData.progressCurrent ? parseFloat(formData.progressCurrent) : null,
+          progress_total: formData.progressTotal ? parseFloat(formData.progressTotal) : null,
+        })
+        .eq('id', logId)
+        .eq('user_id', user.id)
 
-      if (error) throw error
+      if (updateError) throw updateError
 
       router.push('/library')
       router.refresh()
     } catch (err: any) {
-      setError(err.message || 'Failed to create log')
+      setError(err.message || 'Failed to update log')
     } finally {
-      setLoading(false)
+      setSaving(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Spinner />
+      </div>
+    )
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold text-amber-800 mb-6">Create Learning Log</h1>
+        <h1 className="text-2xl font-bold text-amber-800 mb-6">Edit Learning Log</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-lime-200 shadow-sm">
           <div>
@@ -297,22 +357,22 @@ export default function CreatePage() {
               type="button"
               variant="secondary"
               onClick={() => router.back()}
-              disabled={loading}
+              disabled={saving}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={loading}
+              disabled={saving}
               className="flex-1 flex items-center justify-center gap-2"
             >
-              {loading ? (
+              {saving ? (
                 <span className="flex items-center gap-2">
                   <Spinner size="sm" />
                   Saving...
                 </span>
               ) : (
-                'Save Log'
+                'Update Log'
               )}
             </Button>
           </div>
@@ -322,3 +382,4 @@ export default function CreatePage() {
     </div>
   )
 }
+
