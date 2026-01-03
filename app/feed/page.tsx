@@ -101,7 +101,7 @@ export default async function FeedPage() {
               />
             </svg>
             <h3 className="mt-2 text-sm font-medium text-gray-900">No posts yet</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-700">
               Follow friends to see their shared learning logs here
             </p>
           </div>
@@ -115,13 +115,13 @@ export default async function FeedPage() {
                       <span className={`text-xs px-2 py-1 rounded-full font-medium ${contentTypeColors[log.content_type]}`}>
                         {log.content_type}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-600">
                         {formatDate(log.consumed_date)}
                       </span>
                     </div>
                     <h3 className="font-semibold text-lg text-gray-900">{log.title}</h3>
                     {log.creator && (
-                      <p className="text-sm text-gray-600">by {log.creator}</p>
+                      <p className="text-sm text-gray-700">by {log.creator}</p>
                     )}
                     {log.profiles && (
                       <Link 
@@ -136,24 +136,24 @@ export default async function FeedPage() {
 
                 <div className="space-y-3 text-sm">
                   <div>
-                    <p className="font-medium text-gray-700 mb-1">Key Points:</p>
-                    <p className="text-gray-600 whitespace-pre-wrap">{log.key_points}</p>
+                    <p className="font-medium text-gray-800 mb-1">Key Points:</p>
+                    <p className="text-gray-700 whitespace-pre-wrap">{log.key_points}</p>
                   </div>
 
                   <div>
-                    <p className="font-medium text-gray-700 mb-1">How I'll Use This:</p>
-                    <p className="text-gray-600 whitespace-pre-wrap">{log.practical_application}</p>
+                    <p className="font-medium text-gray-800 mb-1">How I'll Use This:</p>
+                    <p className="text-gray-700 whitespace-pre-wrap">{log.practical_application}</p>
                   </div>
 
                   <div>
-                    <p className="font-medium text-gray-700 mb-1">Summary:</p>
-                    <p className="text-gray-600 whitespace-pre-wrap">{log.summary}</p>
+                    <p className="font-medium text-gray-800 mb-1">Summary:</p>
+                    <p className="text-gray-700 whitespace-pre-wrap">{log.summary}</p>
                   </div>
                 </div>
 
                 <div className="pt-2 border-t border-gray-100">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-500">
                       Logged {formatDate(log.created_at)}
                     </p>
                     <ReactionButton logId={log.id} />
