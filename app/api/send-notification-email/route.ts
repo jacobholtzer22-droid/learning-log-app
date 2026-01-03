@@ -4,8 +4,6 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -47,13 +45,7 @@ export async function POST(request: NextRequest) {
       .eq('id', actorUserId)
       .single()
 
-    // Check if Resend API key is configured
-    if (!process.env.RESEND_API_KEY) {
-      console.error('RESEND_API_KEY is not set')
-      return NextResponse.json({ error: 'Email service not configured' }, { status: 500 })
-    }
-    
-    console.log('Resend API key found, proceeding with email send')
+    console.log('Resend API key check - will initialize Resend when needed')
 
     // Get recipient's email using Supabase Admin API
     let recipientEmail: string | null = null
@@ -84,6 +76,15 @@ export async function POST(request: NextRequest) {
     console.log('Preparing to send email to:', recipientEmail)
 
     // Send email using Resend
+    // Initialize Resend only when needed (lazy initialization)
+    const resendApiKey = process.env.RESEND_API_KEY
+    if (!resendApiKey) {
+      console.error('RESEND_API_KEY is not set')
+      return NextResponse.json({ error: 'Email service not configured' }, { status: 500 })
+    }
+    
+    const resend = new Resend(resendApiKey)
+    
     // Use your verified domain to avoid spam. Get it from environment variable or use Resend's test domain
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'LearningLogs <onboarding@resend.dev>'
     
