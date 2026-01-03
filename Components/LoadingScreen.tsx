@@ -1,19 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-
 export function LoadingScreen() {
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 2500)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (!loading) return null
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-lime-100">

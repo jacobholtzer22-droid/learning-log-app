@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ToastProvider } from '../Components/Toast'
-import { LoadingScreen } from '../Components/LoadingScreen'
+import { LoadingProvider } from '../Components/LoadingProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,8 +37,9 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-gray-50`}>
         <ToastProvider>
-          <LoadingScreen />
-          {children}
+          <LoadingProvider>
+            {children}
+          </LoadingProvider>
         </ToastProvider>
       </body>
     </html>

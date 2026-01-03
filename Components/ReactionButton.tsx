@@ -81,6 +81,33 @@ export function ReactionButton({ logId }: ReactionButtonProps) {
 
       setHasLiked(true)
       setCount(count + 1)
+      
+      // Send email notification to log owner
+      try {
+        // Get log owner
+        const { data: log } = await supabase
+          .from('logs')
+          .select('user_id, title')
+          .eq('id', logId)
+          .single()
+        
+        if (log && log.user_id !== user.id) {
+          await fetch('/api/send-notification-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'like',
+              recipientUserId: log.user_id,
+              actorUserId: user.id,
+              logId: logId,
+              logTitle: log.title,
+            }),
+          })
+        }
+      } catch (emailError) {
+        // Silently fail - email is optional
+        console.error('Failed to send like notification email:', emailError)
+      }
     }
 
     setLoading(false)

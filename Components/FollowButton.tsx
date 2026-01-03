@@ -79,6 +79,32 @@ export function FollowButton({ userId, hasLogs = false }: FollowButtonProps) {
       if (!error) {
         setIsFollowing(true)
         showToast('Following!')
+        
+        // Send email notification (server will handle getting recipient email)
+        try {
+          const { data: { user: currentUser } } = await supabase.auth.getUser()
+          if (currentUser) {
+            const response = await fetch('/api/send-notification-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                type: 'follow',
+                recipientUserId: userId,
+                actorUserId: currentUser.id,
+              }),
+            })
+            
+            const result = await response.json()
+            if (!response.ok) {
+              console.error('Email notification failed:', result)
+            } else {
+              console.log('Email notification sent:', result)
+            }
+          }
+        } catch (emailError) {
+          // Log error but don't block the follow action
+          console.error('Failed to send follow notification email:', emailError)
+        }
       } else {
         showToast('Failed to follow', 'error')
       }

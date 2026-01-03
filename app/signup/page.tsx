@@ -5,6 +5,7 @@ import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useLoading } from '../../Components/LoadingProvider'
 
 function Button({ children, ...props }: any) {
   return (
@@ -46,6 +47,7 @@ export default function SignupPage() {
   const [error, setError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [loading, setLoading] = useState(false)
+  const { setLoading: setGlobalLoading } = useLoading()
   const router = useRouter()
 
   const supabase = createBrowserClient(
@@ -73,6 +75,8 @@ export default function SignupPage() {
       return
     }
 
+    setGlobalLoading(true)
+
     try {
       const fullName = `${firstName.trim()} ${lastName.trim()}`
       const { error } = await supabase.auth.signUp({
@@ -92,7 +96,7 @@ export default function SignupPage() {
       router.push(`/check-email?email=${encodeURIComponent(email)}`)
     } catch (err: any) {
       setError(err.message || 'Failed to sign up')
-    } finally {
+      setGlobalLoading(false)
       setLoading(false)
     }
   }
