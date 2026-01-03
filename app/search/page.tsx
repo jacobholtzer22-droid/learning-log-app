@@ -103,7 +103,7 @@ export default function SearchPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && searchUsers()}
               placeholder="Search by username..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none text-gray-900 placeholder-gray-500"
             />
             <button
               onClick={searchUsers}
@@ -124,7 +124,7 @@ export default function SearchPage() {
 
         {users.length === 0 && !loading && searchQuery && (
           <div className="text-center py-12">
-            <p className="text-gray-500">No users found</p>
+            <p className="text-gray-700">No users found</p>
           </div>
         )}
 
@@ -145,7 +145,7 @@ export default function SearchPage() {
                     </h3>
                   </Link>
                   {user.full_name && (
-                    <p className="text-sm text-gray-600">{user.full_name}</p>
+                    <p className="text-sm text-gray-700">{user.full_name}</p>
                   )}
                 </div>
 
@@ -163,7 +163,7 @@ export default function SearchPage() {
                 )}
                 
                 {isCurrentUser && (
-                  <span className="text-sm text-gray-500">You</span>
+                  <span className="text-sm text-gray-700">You</span>
                 )}
               </div>
             )

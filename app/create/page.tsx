@@ -28,12 +28,12 @@ function Input({ label, ...props }: any) {
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-800 mb-1">
           {label}
         </label>
       )}
       <input
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none transition"
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none transition text-gray-900 placeholder-gray-500"
         {...props}
       />
     </div>
@@ -44,12 +44,12 @@ function Textarea({ label, ...props }: any) {
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-800 mb-1">
           {label}
         </label>
       )}
       <textarea
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none transition resize-none"
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none transition resize-none text-gray-900 placeholder-gray-500"
         {...props}
       />
     </div>
@@ -117,13 +117,13 @@ export default function CreatePage() {
 
         <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-lime-200 shadow-sm">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-800 mb-2">
               What did you learn from?
             </label>
             <select
               value={formData.contentType}
               onChange={(e) => setFormData({ ...formData, contentType: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-transparent outline-none text-gray-900"
             >
               <option value="book">Book</option>
               <option value="podcast">Podcast</option>
@@ -194,7 +194,7 @@ export default function CreatePage() {
               onChange={(e) => setFormData({ ...formData, isShared: e.target.checked })}
               className="w-5 h-5 text-lime-600 rounded focus:ring-2 focus:ring-lime-500"
             />
-            <label htmlFor="isShared" className="text-sm font-medium text-gray-700">
+            <label htmlFor="isShared" className="text-sm font-medium text-gray-800">
               Share with friends
             </label>
           </div>
