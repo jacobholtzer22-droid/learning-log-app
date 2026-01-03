@@ -7,9 +7,10 @@ import { useToast } from './Toast'
 
 interface FollowButtonProps {
   userId: string
+  hasLogs?: boolean
 }
 
-export function FollowButton({ userId }: FollowButtonProps) {
+export function FollowButton({ userId, hasLogs = false }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(false)
   const [loading, setLoading] = useState(true)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
@@ -92,16 +93,21 @@ export function FollowButton({ userId }: FollowButtonProps) {
   }
 
   return (
-    <button
-      onClick={handleFollowToggle}
-      disabled={loading}
-      className={`px-4 py-2 text-sm font-medium rounded-lg transition disabled:opacity-50 ${
-        isFollowing
-          ? 'text-red-600 bg-red-50 hover:bg-red-100'
-          : 'text-white bg-lime-600 hover:bg-lime-700'
-      }`}
-    >
-      {loading ? '...' : isFollowing ? 'Unfollow' : 'Follow'}
-    </button>
+    <div className="flex items-center gap-2">
+      <button
+        onClick={handleFollowToggle}
+        disabled={loading}
+        className={`px-4 py-2 text-sm font-medium rounded-lg transition disabled:opacity-50 ${
+          isFollowing
+            ? 'text-red-600 bg-red-50 hover:bg-red-100'
+            : 'text-white bg-lime-600 hover:bg-lime-700'
+        }`}
+      >
+        {loading ? '...' : isFollowing ? 'Unfollow' : 'Follow'}
+      </button>
+      {!isFollowing && !loading && hasLogs && (
+        <span className="text-sm text-gray-600">Follow to see logs</span>
+      )}
+    </div>
   )
 }

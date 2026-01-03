@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { ReactionButton } from '../../../Components/ReactionButton'
 import { CommentSection } from '../../../Components/CommentSection'
 import { BackButton } from '../../../Components/BackButton'
@@ -108,18 +109,18 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
                 <p className="text-gray-700 mt-1">{profile.full_name}</p>
               )}
             </div>
-            <FollowButton userId={profile.id} />
+            <FollowButton userId={profile.id} hasLogs={logs.length > 0} />
           </div>
 
           <div className="flex gap-6 text-sm">
-            <div>
+            <Link href={`/user/${profile.username}/connections`} className="hover:text-lime-600 cursor-pointer">
               <span className="font-semibold text-gray-900">{stats.followers}</span>
               <span className="text-gray-700 ml-1">Followers</span>
-            </div>
-            <div>
+            </Link>
+            <Link href={`/user/${profile.username}/connections`} className="hover:text-lime-600 cursor-pointer">
               <span className="font-semibold text-gray-900">{stats.following}</span>
               <span className="text-gray-700 ml-1">Following</span>
-            </div>
+            </Link>
             <div>
               <span className="font-semibold text-gray-900">{logs.length}</span>
               <span className="text-gray-700 ml-1">Shared Logs</span>
