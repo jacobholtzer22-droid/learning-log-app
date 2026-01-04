@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const type = searchParams.get('type')
-  const next = searchParams.get('next') ?? '/feed'
+  const next = searchParams.get('next') ?? '/library'
 
   if (code) {
     const cookieStore = await cookies()

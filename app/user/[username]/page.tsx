@@ -6,6 +6,7 @@ import { ReactionButton } from '../../../Components/ReactionButton'
 import { CommentSection } from '../../../Components/CommentSection'
 import { BackButton } from '../../../Components/BackButton'
 import { FollowButton } from '../../../Components/FollowButton'
+import { getUserStreak } from '../../../Lib/streak'
 
 async function getSupabaseClient() {
   const cookieStore = await cookies()
@@ -95,6 +96,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
   
   const logs = await getUserLogs(profile.id)
   const stats = await getFollowStats(profile.id)
+  const streak = await getUserStreak(profile.id)
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -112,7 +114,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
             <FollowButton userId={profile.id} hasLogs={logs.length > 0} />
           </div>
 
-          <div className="flex gap-6 text-sm">
+          <div className="flex gap-6 text-sm flex-wrap">
             <Link href={`/user/${profile.username}/connections`} className="hover:text-lime-600 cursor-pointer">
               <span className="font-semibold text-gray-900">{stats.followers}</span>
               <span className="text-gray-700 ml-1">Followers</span>
@@ -125,6 +127,13 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
               <span className="font-semibold text-gray-900">{logs.length}</span>
               <span className="text-gray-700 ml-1">Shared Logs</span>
             </div>
+            {streak > 0 && (
+              <div className="flex items-center gap-1">
+                <span className="text-orange-500">🔥</span>
+                <span className="font-semibold text-gray-900">{streak}</span>
+                <span className="text-gray-700 ml-1">Day{streak !== 1 ? 's' : ''} Streak</span>
+              </div>
+            )}
           </div>
         </div>
 

@@ -222,6 +222,19 @@ export default async function LibraryPage() {
             <p className="mt-1 text-sm text-gray-700">
               Start logging what you learn!
             </p>
+            
+            <div className="mt-6 mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4 max-w-md mx-auto">
+              <div className="flex items-start gap-2 text-left">
+                <span className="text-orange-500 text-lg">🔥</span>
+                <div>
+                  <p className="text-sm font-medium text-orange-900 mb-1">Build Your Learning Streak!</p>
+                  <p className="text-xs text-orange-800">
+                    Create your first log to start your streak. Keep logging or updating progress daily to build it up!
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-6">
               <Link href="/create">
                 <button className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-lime-600 hover:bg-lime-700">

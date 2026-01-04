@@ -316,18 +316,18 @@ export default function EditLogPage() {
             </p>
             
             <Textarea
-              label="What are the 3 most important points? (In your own words)"
+              label="One idea that surprised me"
               value={formData.keyPoints}
               onChange={(e: any) => setFormData({ ...formData, keyPoints: e.target.value })}
-              placeholder="Write the 3 key takeaways that matter most to you..."
+              placeholder="What was one idea that surprised you or caught your attention?"
               rows={4}
             />
 
             <Textarea
-              label="How will you use this in the next 7 days? (Real example)"
+              label="One sentence explaining it to someone else"
               value={formData.practicalApplication}
               onChange={(e: any) => setFormData({ ...formData, practicalApplication: e.target.value })}
-              placeholder="Describe a specific, concrete way you'll apply this learning..."
+              placeholder="Explain this idea in one sentence as if you were telling someone else..."
               rows={3}
               className="mt-4"
             />

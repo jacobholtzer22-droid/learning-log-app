@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { BottomNav } from '../../Components/BottomNav'
 import { Spinner } from '../../Components/Spinner'
 import { useToast } from '../../Components/Toast'
+import { getCurrentUserStreak } from '../../Lib/streak'
 
 function Button({ children, variant = 'primary', ...props }: any) {
   const variants = {
@@ -29,6 +30,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
   const [stats, setStats] = useState({ followers: 0, following: 0, logs: 0 })
+  const [streak, setStreak] = useState(0)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const { showToast } = useToast()
@@ -73,6 +75,10 @@ export default function ProfilePage() {
           following: following || 0,
           logs: logs || 0,
         })
+
+        // Get streak
+        const userStreak = await getCurrentUserStreak()
+        setStreak(userStreak)
       }
       
       setLoading(false)
@@ -128,7 +134,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="border-t pt-4 mt-4">
-            <div className="flex gap-6 text-sm">
+            <div className="flex gap-6 text-sm flex-wrap">
               <Link href="/following" className="hover:text-lime-600">
                 <span className="font-semibold text-gray-900">{stats.followers}</span>
                 <span className="text-gray-600 ml-1">Followers</span>
@@ -141,6 +147,13 @@ export default function ProfilePage() {
                 <span className="font-semibold text-gray-900">{stats.logs}</span>
                 <span className="text-gray-600 ml-1">Total Logs</span>
               </div>
+              {streak > 0 && (
+                <div className="flex items-center gap-1">
+                  <span className="text-orange-500">🔥</span>
+                  <span className="font-semibold text-gray-900">{streak}</span>
+                  <span className="text-gray-600 ml-1">Day{streak !== 1 ? 's' : ''} Streak</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

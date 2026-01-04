@@ -64,7 +64,7 @@ export default function LoginPage() {
 
       if (error) throw error
 
-      router.push('/feed')
+      router.push('/library')
       router.refresh()
     } catch (err: any) {
       setError(err.message || 'Failed to login')

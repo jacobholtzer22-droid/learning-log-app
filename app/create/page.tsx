@@ -60,6 +60,7 @@ export default function CreatePage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showFirstLogCelebration, setShowFirstLogCelebration] = useState(false)
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -90,6 +91,14 @@ export default function CreatePage() {
       
       if (!user) throw new Error('Not authenticated')
 
+      // Check if this is the user's first log
+      const { count } = await supabase
+        .from('logs')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+
+      const isFirstLog = (count || 0) === 0
+
       const { error } = await supabase.from('logs').insert({
         user_id: user.id,
         content_type: formData.contentType,
@@ -107,13 +116,46 @@ export default function CreatePage() {
 
       if (error) throw error
 
-      router.push('/library')
-      router.refresh()
+      // Show celebration screen for first log, otherwise redirect
+      if (isFirstLog) {
+        setShowFirstLogCelebration(true)
+      } else {
+        router.push('/library')
+        router.refresh()
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to create log')
     } finally {
       setLoading(false)
     }
+  }
+
+  // Show celebration screen for first log
+  if (showFirstLogCelebration) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-lime-50 via-amber-50 to-orange-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center space-y-6 py-12">
+          <div className="text-6xl mb-4">🎉</div>
+          <h1 className="text-3xl font-bold text-gray-900 leading-tight">
+            You just captured something forever that most people forget within 24 hours
+          </h1>
+          <p className="text-lg text-gray-700 mt-4">
+            This is the start of your learning journey. Keep building your knowledge library, one log at a time.
+          </p>
+          <div className="pt-6">
+            <Button
+              onClick={() => {
+                router.push('/library')
+                router.refresh()
+              }}
+              className="w-full"
+            >
+              View My Library
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -249,6 +291,18 @@ export default function CreatePage() {
             </p>
           </div>
 
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+            <div className="flex items-start gap-2">
+              <span className="text-orange-500 text-lg">🔥</span>
+              <div>
+                <p className="text-sm font-medium text-orange-900 mb-1">Build Your Learning Streak!</p>
+                <p className="text-xs text-orange-800">
+                  Create logs or update progress daily to build your streak. Every day you're active counts toward your streak!
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <p className="text-sm font-medium text-amber-900 mb-2">💡 Optional but Recommended</p>
             <p className="text-xs text-amber-800 mb-4">
@@ -256,18 +310,18 @@ export default function CreatePage() {
             </p>
             
             <Textarea
-              label="What are the 3 most important points? (In your own words)"
+              label="One idea that surprised me"
               value={formData.keyPoints}
               onChange={(e: any) => setFormData({ ...formData, keyPoints: e.target.value })}
-              placeholder="Write the 3 key takeaways that matter most to you..."
+              placeholder="What was one idea that surprised you or caught your attention?"
               rows={4}
             />
 
             <Textarea
-              label="How will you use this in the next 7 days? (Real example)"
+              label="One sentence explaining it to someone else"
               value={formData.practicalApplication}
               onChange={(e: any) => setFormData({ ...formData, practicalApplication: e.target.value })}
-              placeholder="Describe a specific, concrete way you'll apply this learning..."
+              placeholder="Explain this idea in one sentence as if you were telling someone else..."
               rows={3}
               className="mt-4"
             />

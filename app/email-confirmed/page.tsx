@@ -60,10 +60,10 @@ export default function EmailConfirmedPage() {
 
             <div className="pt-4">
               <Link
-                href="/feed"
+                href="/library"
                 className="block w-full px-6 py-3 text-lg font-medium rounded-lg transition-colors bg-lime-600 text-white hover:bg-lime-700 active:bg-lime-800 text-center"
               >
-                Continue to Feed
+                Continue to Library
               </Link>
             </div>
           </div>

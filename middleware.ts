@@ -38,10 +38,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // If user is signed in and trying to access auth pages, redirect to feed
+  // If user is signed in and trying to access auth pages, redirect to library
   if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/signup'))) {
     const url = request.nextUrl.clone()
-    url.pathname = '/feed'
+    url.pathname = '/library'
     return NextResponse.redirect(url)
   }
 
