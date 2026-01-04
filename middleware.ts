@@ -31,15 +31,15 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // If user is not signed in and trying to access protected routes, redirect to login
-  if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/signup') && !request.nextUrl.pathname.startsWith('/email-confirmed') && !request.nextUrl.pathname.startsWith('/check-email') && !request.nextUrl.pathname.startsWith('/api')) {
+  // If user is not signed in and trying to access protected routes, redirect to root (login)
+  if (!user && request.nextUrl.pathname !== '/' && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/signup') && !request.nextUrl.pathname.startsWith('/email-confirmed') && !request.nextUrl.pathname.startsWith('/check-email') && !request.nextUrl.pathname.startsWith('/api')) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    url.pathname = '/'
     return NextResponse.redirect(url)
   }
 
-  // If user is signed in and trying to access auth pages, redirect to library
-  if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/signup'))) {
+  // If user is signed in and trying to access auth pages (including root), redirect to library
+  if (user && (request.nextUrl.pathname === '/' || request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/signup'))) {
     const url = request.nextUrl.clone()
     url.pathname = '/library'
     return NextResponse.redirect(url)

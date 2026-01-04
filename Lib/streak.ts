@@ -29,16 +29,16 @@ async function getSupabaseClient() {
 }
 
 /**
- * Calculate user streak based on daily activity
+ * Calculate user streak based on 32-hour activity windows
  * Activity counts if user:
- * - Created a new log on that day (based on created_at)
- * - Updated progress on a log on that day (based on updated_at, if different from created_at)
+ * - Created a new log (based on created_at)
+ * - Updated progress on a log (based on updated_at, if different from created_at)
  * 
  * Streak rules:
- * - Streaks must be consecutive days (no gaps)
- * - If you skip a day, the streak resets
- * - Starts counting from the most recent activity date backwards
- * - Example: Log on Thu, skip Fri, log on Sat = streak of 1 (just Sat)
+ * - Each log must be created within 32 hours of the previous one
+ * - If you don't create a log within 32 hours of your last one, the streak resets to 0
+ * - Starts counting from the most recent activity timestamp backwards
+ * - Checks actual timestamps, not calendar days
  */
 export async function getUserStreak(userId: string): Promise<number> {
   const supabase = await getSupabaseClient()
@@ -54,59 +54,62 @@ export async function getUserStreak(userId: string): Promise<number> {
     return 0
   }
   
-  // Get unique activity dates (from created_at or updated_at)
-  const activityDates = new Set<string>()
+  // Collect all activity timestamps (both created_at and updated_at)
+  const activityTimestamps: Date[] = []
   
   logs.forEach(log => {
-    // Add creation date
+    // Add creation timestamp
     if (log.created_at) {
-      const createdDate = new Date(log.created_at).toISOString().split('T')[0]
-      activityDates.add(createdDate)
+      activityTimestamps.push(new Date(log.created_at))
     }
     
-    // Add update date if it exists and is different from created_at
+    // Add update timestamp if it exists and is different from created_at
     // This represents progress updates
     if (log.updated_at && log.updated_at !== log.created_at) {
-      const updatedDate = new Date(log.updated_at).toISOString().split('T')[0]
-      activityDates.add(updatedDate)
+      activityTimestamps.push(new Date(log.updated_at))
     }
   })
   
-  // Convert to sorted array (most recent first)
-  const sortedDates = Array.from(activityDates).sort().reverse()
+  // Sort timestamps (most recent first)
+  activityTimestamps.sort((a, b) => b.getTime() - a.getTime())
   
-  if (sortedDates.length === 0) {
+  if (activityTimestamps.length === 0) {
     return 0
   }
   
-  // Calculate streak by checking consecutive days
-  // Start from the most recent activity date and count backwards
-  const mostRecentActivity = sortedDates[0]
-  let checkDate = new Date(mostRecentActivity + 'T00:00:00.000Z')
-  let consecutiveDays = 0
+  // Check if the most recent activity was within the last 32 hours
+  const now = new Date()
+  const mostRecentActivity = activityTimestamps[0]
+  const hoursSinceLastActivity = (now.getTime() - mostRecentActivity.getTime()) / (1000 * 60 * 60)
   
-  // Count consecutive days with activity going backwards
-  // Keep a copy of sorted dates to check against
-  const datesSet = new Set(sortedDates)
+  // If the most recent activity was more than 32 hours ago, streak is 0
+  if (hoursSinceLastActivity > 32) {
+    return 0
+  }
   
-  while (true) {
-    const checkDateStr = checkDate.toISOString().split('T')[0]
+  // Calculate streak by checking if each activity was within 32 hours of the previous one
+  let streak = 1 // At least 1 since the most recent activity is within 32 hours
+  
+  for (let i = 1; i < activityTimestamps.length; i++) {
+    const currentActivity = activityTimestamps[i - 1]
+    const previousActivity = activityTimestamps[i]
     
-    if (datesSet.has(checkDateStr)) {
-      consecutiveDays++
-      // Move to previous day
-      checkDate = new Date(checkDate.getTime() - 24 * 60 * 60 * 1000)
+    // Calculate hours between current and previous activity
+    const hoursBetween = (currentActivity.getTime() - previousActivity.getTime()) / (1000 * 60 * 60)
+    
+    // If previous activity was within 32 hours of current activity, continue the streak
+    if (hoursBetween <= 32) {
+      streak++
     } else {
-      // If we're checking yesterday or earlier and no activity, break
+      // Gap is too large, streak ends here
       break
     }
     
-    // Safety check: don't go back more than a reasonable amount (e.g., 1000 days)
-    if (consecutiveDays > 1000) break
+    // Safety check: don't count more than a reasonable amount (e.g., 1000 activities)
+    if (streak > 1000) break
   }
   
-  // Return the streak count (1 or more days)
-  return consecutiveDays
+  return streak
 }
 
 /**

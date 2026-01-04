@@ -115,7 +115,10 @@ export default function SignupPage() {
             />
           </div>
           <h1 className="text-4xl font-bold text-amber-800">LearningLogs</h1>
-          <p className="mt-2 text-amber-700">Create your account</p>
+          <p className="mt-3 text-base font-medium text-amber-700 max-w-md mx-auto">
+            Turn passive content into durable memory in under 3 minutes
+          </p>
+          <p className="mt-4 text-amber-600">Create your account</p>
         </div>
 
         <form onSubmit={handleSignup} className="mt-8 space-y-6 bg-white p-6 rounded-xl shadow-sm border border-lime-200">

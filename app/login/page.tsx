@@ -87,7 +87,10 @@ export default function LoginPage() {
             />
           </div>
           <h1 className="text-4xl font-bold text-amber-800">LearningLogs</h1>
-          <p className="mt-2 text-amber-700">Sign in to continue</p>
+          <p className="mt-3 text-base font-medium text-amber-700 max-w-md mx-auto">
+            Turn passive content into durable memory in under 3 minutes
+          </p>
+          <p className="mt-4 text-amber-600">Sign in to continue</p>
         </div>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-6 bg-white p-6 rounded-xl shadow-sm border border-lime-200">
@@ -124,7 +127,7 @@ export default function LoginPage() {
           <p className="text-center text-sm text-gray-700">
             Don't have an account?{' '}
             <Link href="/signup" className="text-lime-600 hover:text-lime-700 font-medium">
-              Sign up
+              Create one
             </Link>
           </p>
         </form>

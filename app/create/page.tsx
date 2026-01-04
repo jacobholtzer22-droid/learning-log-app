@@ -137,7 +137,7 @@ export default function CreatePage() {
         <div className="max-w-md w-full text-center space-y-6 py-12">
           <div className="text-6xl mb-4">🎉</div>
           <h1 className="text-3xl font-bold text-gray-900 leading-tight">
-            You just captured something forever that most people forget within 24 hours
+            You just captured something most people forget in 24 hours
           </h1>
           <p className="text-lg text-gray-700 mt-4">
             This is the start of your learning journey. Keep building your knowledge library, one log at a time.
@@ -161,7 +161,12 @@ export default function CreatePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold text-amber-800 mb-6">Create Learning Log</h1>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-amber-800 mb-2">Create Learning Log</h1>
+          <p className="text-sm text-gray-600">
+            Turn passive content into durable memory in under 3 minutes
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-lime-200 shadow-sm">
           <div>

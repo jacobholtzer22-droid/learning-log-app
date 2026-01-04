@@ -53,8 +53,11 @@ export default function EmailConfirmedPage() {
               <p className="text-lg text-gray-900 font-medium mb-2">
                 Successfully verified email
               </p>
-              <p className="text-gray-600">
+              <p className="text-gray-600 mb-3">
                 Your email has been confirmed. You can now access all features of LearningLogs.
+              </p>
+              <p className="text-sm text-gray-700 font-medium">
+                Turn passive content into durable memory in under 3 minutes
               </p>
             </div>
 

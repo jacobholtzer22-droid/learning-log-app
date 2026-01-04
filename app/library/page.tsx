@@ -219,8 +219,11 @@ export default async function LibraryPage() {
               />
             </svg>
             <h3 className="mt-2 text-sm font-medium text-gray-900">No logs yet</h3>
-            <p className="mt-1 text-sm text-gray-700">
+            <p className="mt-1 text-sm text-gray-700 mb-2">
               Start logging what you learn!
+            </p>
+            <p className="text-xs text-gray-600 mb-4">
+              Turn passive content into durable memory in under 3 minutes
             </p>
             
             <div className="mt-6 mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4 max-w-md mx-auto">
