@@ -127,7 +127,7 @@ export default function LoginPage() {
           <p className="text-center text-sm text-gray-700">
             Don't have an account?{' '}
             <Link href="/signup" className="text-lime-600 hover:text-lime-700 font-medium">
-              Create one
+              sign up here
             </Link>
           </p>
         </form>
