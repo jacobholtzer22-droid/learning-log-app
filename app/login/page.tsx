@@ -68,6 +68,7 @@ export default function LoginPage() {
       router.refresh()
     } catch (err: any) {
       setError(err.message || 'Failed to login')
+    } finally {
       setGlobalLoading(false)
       setLoading(false)
     }

@@ -96,6 +96,7 @@ export default function SignupPage() {
       router.push(`/check-email?email=${encodeURIComponent(email)}`)
     } catch (err: any) {
       setError(err.message || 'Failed to sign up')
+    } finally {
       setGlobalLoading(false)
       setLoading(false)
     }
