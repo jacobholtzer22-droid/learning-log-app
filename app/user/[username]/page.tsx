@@ -7,6 +7,7 @@ import { CommentSection } from '../../../Components/CommentSection'
 import { BackButton } from '../../../Components/BackButton'
 import { FollowButton } from '../../../Components/FollowButton'
 import { getUserStreak } from '../../../Lib/streak'
+import { getLogQuestions } from '../../../Lib/logQuestions'
 
 async function getSupabaseClient() {
   const cookieStore = await cookies()
@@ -204,20 +205,31 @@ export default async function UserProfilePage({ params }: { params: Promise<{ us
                     <p className="font-medium text-gray-800 mb-1">Summary:</p>
                     <p className="text-gray-700 whitespace-pre-wrap">{log.summary}</p>
                   </div>
-
-                  {log.key_points && (
-                    <div>
-                      <p className="font-medium text-gray-800 mb-1">Key Points:</p>
-                      <p className="text-gray-700 whitespace-pre-wrap">{log.key_points}</p>
-                    </div>
-                  )}
-
-                  {log.practical_application && (
-                    <div>
-                      <p className="font-medium text-gray-800 mb-1">How I'll Use This:</p>
-                      <p className="text-gray-700 whitespace-pre-wrap">{log.practical_application}</p>
-                    </div>
-                  )}
+                  {(() => {
+                    const q = getLogQuestions(log.content_type)
+                    return (
+                      <>
+                        {log.key_points && (
+                          <div>
+                            <p className="font-medium text-gray-800 mb-1">{q.q1}</p>
+                            <p className="text-gray-700 whitespace-pre-wrap">{log.key_points}</p>
+                          </div>
+                        )}
+                        {log.practical_application && (
+                          <div>
+                            <p className="font-medium text-gray-800 mb-1">{q.q2}</p>
+                            <p className="text-gray-700 whitespace-pre-wrap">{log.practical_application}</p>
+                          </div>
+                        )}
+                        {log.optional_application && (
+                          <div>
+                            <p className="font-medium text-gray-800 mb-1">{q.q3} (optional)</p>
+                            <p className="text-gray-700 whitespace-pre-wrap">{log.optional_application}</p>
+                          </div>
+                        )}
+                      </>
+                    )
+                  })()}
                 </div>
 
                 <div className="pt-2 border-t border-gray-100">

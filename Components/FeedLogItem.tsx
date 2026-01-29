@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ReactionButton } from './ReactionButton'
 import { CommentSection } from './CommentSection'
+import { getLogQuestions } from '../Lib/logQuestions'
 
 interface FeedLogItemProps {
   log: {
@@ -16,6 +17,7 @@ interface FeedLogItemProps {
     summary: string
     key_points?: string
     practical_application?: string
+    optional_application?: string
     is_in_progress?: boolean
     progress_current?: number
     progress_total?: number
@@ -37,7 +39,8 @@ export function FeedLogItem({ log, contentTypeColors }: FeedLogItemProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   // Check if there's additional content beyond the summary
-  const hasAdditionalContent = !!(log.key_points || log.practical_application)
+  const hasAdditionalContent = !!(log.key_points || log.practical_application || log.optional_application)
+  const q = getLogQuestions(log.content_type)
 
   return (
     <div className="bg-white rounded-lg border border-lime-200 shadow-sm p-4 space-y-3">
@@ -111,15 +114,20 @@ export function FeedLogItem({ log, contentTypeColors }: FeedLogItemProps) {
           <>
             {log.key_points && (
               <div>
-                <p className="font-medium text-gray-800 mb-1">Key Points:</p>
+                <p className="font-medium text-gray-800 mb-1">{q.q1}</p>
                 <p className="text-gray-700 whitespace-pre-wrap">{log.key_points}</p>
               </div>
             )}
-
             {log.practical_application && (
               <div>
-                <p className="font-medium text-gray-800 mb-1">How I'll Use This:</p>
+                <p className="font-medium text-gray-800 mb-1">{q.q2}</p>
                 <p className="text-gray-700 whitespace-pre-wrap">{log.practical_application}</p>
+              </div>
+            )}
+            {log.optional_application && (
+              <div>
+                <p className="font-medium text-gray-800 mb-1">{q.q3} (optional)</p>
+                <p className="text-gray-700 whitespace-pre-wrap">{log.optional_application}</p>
               </div>
             )}
           </>

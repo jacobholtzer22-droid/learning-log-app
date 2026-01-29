@@ -165,6 +165,7 @@ export default function ImportPage() {
         consumed_date: book.consumedDate || new Date().toISOString().split('T')[0],
         key_points: keyPoints,
         practical_application: 'Imported - add how you\'ll use this',
+        optional_application: null,
         summary: 'Imported - add your summary',
         is_shared: false,
       })

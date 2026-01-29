@@ -4,7 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
 import { BottomNav } from '../../Components/BottomNav'
+import { LogCelebration } from '../../Components/LogCelebration'
 import { Spinner } from '../../Components/Spinner'
+import { getLogQuestions } from '../../Lib/logQuestions'
 
 function Button({ children, type = 'button', variant = 'primary', ...props }: any) {
   const baseStyles = 'font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
@@ -60,7 +62,7 @@ export default function CreatePage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [showFirstLogCelebration, setShowFirstLogCelebration] = useState(false)
+  const [celebration, setCelebration] = useState<{ isFirstLog: boolean } | null>(null)
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -74,6 +76,7 @@ export default function CreatePage() {
     consumedDate: new Date().toISOString().split('T')[0],
     keyPoints: '',
     practicalApplication: '',
+    optionalApplication: '',
     summary: '',
     isShared: false,
     isInProgress: false,
@@ -107,6 +110,7 @@ export default function CreatePage() {
         consumed_date: formData.consumedDate,
         key_points: formData.keyPoints || null,
         practical_application: formData.practicalApplication || null,
+        optional_application: formData.optionalApplication || null,
         summary: formData.summary,
         is_shared: formData.isShared,
         is_in_progress: formData.isInProgress,
@@ -116,13 +120,8 @@ export default function CreatePage() {
 
       if (error) throw error
 
-      // Show celebration screen for first log, otherwise redirect
-      if (isFirstLog) {
-        setShowFirstLogCelebration(true)
-      } else {
-        router.push('/library')
-        router.refresh()
-      }
+      // Show confetti celebration after every log; streak message only for first log
+      setCelebration({ isFirstLog })
     } catch (err: any) {
       setError(err.message || 'Failed to create log')
     } finally {
@@ -130,31 +129,16 @@ export default function CreatePage() {
     }
   }
 
-  // Show celebration screen for first log
-  if (showFirstLogCelebration) {
+  // Confetti celebration after every log
+  if (celebration) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-lime-50 via-amber-50 to-orange-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full text-center space-y-6 py-12">
-          <div className="text-6xl mb-4">🎉</div>
-          <h1 className="text-3xl font-bold text-gray-900 leading-tight">
-            You just captured something most people forget in 24 hours
-          </h1>
-          <p className="text-lg text-gray-700 mt-4">
-            This is the start of your learning journey. Keep building your knowledge library, one log at a time.
-          </p>
-          <div className="pt-6">
-            <Button
-              onClick={() => {
-                router.push('/library')
-                router.refresh()
-              }}
-              className="w-full"
-            >
-              View My Library
-            </Button>
-          </div>
-        </div>
-      </div>
+      <LogCelebration
+        isFirstLog={celebration.isFirstLog}
+        onContinue={() => {
+          router.push('/library')
+          router.refresh()
+        }}
+      />
     )
   }
 
@@ -313,23 +297,36 @@ export default function CreatePage() {
             <p className="text-xs text-amber-800 mb-4">
               Research shows that answering these questions helps you retain information longer, but they're optional.
             </p>
-            
-            <Textarea
-              label="One idea that surprised me"
-              value={formData.keyPoints}
-              onChange={(e: any) => setFormData({ ...formData, keyPoints: e.target.value })}
-              placeholder="What was one idea that surprised you or caught your attention?"
-              rows={4}
-            />
-
-            <Textarea
-              label="One sentence explaining it to someone else"
-              value={formData.practicalApplication}
-              onChange={(e: any) => setFormData({ ...formData, practicalApplication: e.target.value })}
-              placeholder="Explain this idea in one sentence as if you were telling someone else..."
-              rows={3}
-              className="mt-4"
-            />
+            {(() => {
+              const q = getLogQuestions(formData.contentType)
+              return (
+                <>
+                  <Textarea
+                    label={q.q1}
+                    value={formData.keyPoints}
+                    onChange={(e: any) => setFormData({ ...formData, keyPoints: e.target.value })}
+                    placeholder={q.q1}
+                    rows={4}
+                  />
+                  <Textarea
+                    label={q.q2}
+                    value={formData.practicalApplication}
+                    onChange={(e: any) => setFormData({ ...formData, practicalApplication: e.target.value })}
+                    placeholder={q.q2}
+                    rows={3}
+                    className="mt-4"
+                  />
+                  <Textarea
+                    label={`${q.q3} (optional)`}
+                    value={formData.optionalApplication}
+                    onChange={(e: any) => setFormData({ ...formData, optionalApplication: e.target.value })}
+                    placeholder={q.q3}
+                    rows={3}
+                    className="mt-4"
+                  />
+                </>
+              )
+            })()}
           </div>
 
           <div className="flex items-center space-x-3 pt-4 border-t">
