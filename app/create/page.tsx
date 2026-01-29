@@ -375,8 +375,9 @@ export default function CreatePage() {
             <Button
               type="submit"
               variant={isFormValid ? 'primary' : 'muted'}
+              size="lg"
               disabled={loading || !isFormValid}
-              className="flex-1 flex items-center justify-center gap-2"
+              className={`flex-1 flex items-center justify-center gap-2 font-semibold text-lg ${isFormValid ? 'ring-2 ring-blue-500/40' : ''}`}
             >
               {loading ? (
                 <span className="flex items-center gap-2">

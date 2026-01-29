@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'muted'
   size?: 'sm' | 'md' | 'lg'
 }
 
@@ -15,9 +15,10 @@ export function Button({
   const baseStyles = 'font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
   
   const variantStyles = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800',
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 shadow-md hover:shadow-lg',
     secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 active:bg-gray-400',
     ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 active:bg-gray-200',
+    muted: 'bg-gray-300 text-gray-500 cursor-not-allowed',
   }
   
   const sizeStyles = {
