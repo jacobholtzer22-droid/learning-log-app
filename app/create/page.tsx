@@ -13,6 +13,7 @@ function Button({ children, type = 'button', variant = 'primary', ...props }: an
   const variantStyles = {
     primary: 'bg-lime-600 text-white hover:bg-lime-700 active:bg-lime-800 px-6 py-3',
     secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 active:bg-gray-400 px-6 py-3',
+    muted: 'bg-gray-300 text-gray-500 px-6 py-3 cursor-not-allowed',
   }
   
   return (
@@ -83,6 +84,12 @@ export default function CreatePage() {
     progressCurrent: '',
     progressTotal: '',
   })
+
+  const isFormValid =
+    formData.title.trim() !== '' &&
+    formData.consumedDate.trim() !== '' &&
+    formData.keyPoints.trim() !== '' &&
+    formData.practicalApplication.trim() !== ''
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -266,9 +273,9 @@ export default function CreatePage() {
             </div>
           )}
 
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 border-t pt-6">
-            <p className="text-sm font-medium text-amber-900 mb-2">💡 Reflection questions (required)</p>
-            <p className="text-xs text-amber-800 mb-4">
+          <div className="bg-lime-50 border border-lime-300 rounded-lg p-4 border-t pt-6">
+            <p className="text-sm font-medium text-lime-800 mb-2">💡 Reflection questions <span className="text-lime-700 font-semibold">(required)</span></p>
+            <p className="text-xs text-lime-700 mb-4">
               Answer these to lock in what you learned.
             </p>
             {(() => {
@@ -309,8 +316,8 @@ export default function CreatePage() {
             </div>
           </div>
 
-          <div className="border-t pt-6">
-            <p className="text-sm font-medium text-gray-800 mb-2">Optional</p>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 border-t pt-6">
+            <p className="text-sm font-medium text-gray-500 mb-2">Optional</p>
             <Textarea
               label="Summary (notes/quotes)"
               value={formData.summary}
@@ -318,7 +325,7 @@ export default function CreatePage() {
               placeholder="Write a summary, notes, quotes, or anything that will help you remember this..."
               rows={4}
             />
-            <p className="text-xs text-gray-600 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               Put anything you want to remember yourself here.
             </p>
             {(() => {
@@ -367,7 +374,8 @@ export default function CreatePage() {
             </Button>
             <Button
               type="submit"
-              disabled={loading}
+              variant={isFormValid ? 'primary' : 'muted'}
+              disabled={loading || !isFormValid}
               className="flex-1 flex items-center justify-center gap-2"
             >
               {loading ? (
