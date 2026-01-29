@@ -377,7 +377,11 @@ export default function CreatePage() {
               variant={isFormValid ? 'primary' : 'muted'}
               size="lg"
               disabled={loading || !isFormValid}
-              className={`flex-1 flex items-center justify-center gap-2 font-semibold text-lg ${isFormValid ? 'ring-2 ring-blue-500/40' : ''}`}
+              className={`flex-1 flex items-center justify-center gap-2 font-bold text-lg ${
+                isFormValid
+                  ? '!bg-emerald-600 !text-white hover:!bg-emerald-500 active:!bg-emerald-700 !shadow-lg hover:!shadow-xl !ring-2 !ring-emerald-400 !ring-offset-2'
+                  : ''
+              }`}
             >
               {loading ? (
                 <span className="flex items-center gap-2">
