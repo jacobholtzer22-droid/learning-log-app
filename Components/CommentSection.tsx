@@ -150,7 +150,7 @@ export function CommentSection({ logId }: CommentSectionProps) {
     <div className="mt-2">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-lime-600 transition"
+        className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-emerald-600 transition"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -161,7 +161,7 @@ export function CommentSection({ logId }: CommentSectionProps) {
       {isOpen && (
         <div className="mt-3 space-y-3">
           {loading ? (
-            <p className="text-sm text-gray-400">Loading comments...</p>
+            <p className="text-sm text-gray-600">Loading comments...</p>
           ) : (
             <>
               {comments.length > 0 && (
@@ -205,12 +205,12 @@ export function CommentSection({ logId }: CommentSectionProps) {
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Add a comment..."
-                  className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500"
+                  className="flex-1 px-3 py-2.5 text-sm bg-white text-gray-900 placeholder:text-gray-500 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:ring-offset-1"
                 />
                 <button
                   type="submit"
                   disabled={submitting || !newComment.trim()}
-                  className="px-4 py-2 text-sm font-medium text-white bg-lime-600 rounded-lg hover:bg-lime-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="px-4 py-2.5 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-md hover:shadow-lg ring-2 ring-emerald-400/50 ring-offset-1 disabled:ring-0"
                 >
                   {submitting ? '...' : 'Post'}
                 </button>
