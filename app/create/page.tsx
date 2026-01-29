@@ -111,7 +111,7 @@ export default function CreatePage() {
         key_points: formData.keyPoints || null,
         practical_application: formData.practicalApplication || null,
         optional_application: formData.optionalApplication || null,
-        summary: formData.summary,
+        summary: formData.summary || null,
         is_shared: formData.isShared,
         is_in_progress: formData.isInProgress,
         progress_current: formData.progressCurrent ? parseFloat(formData.progressCurrent) : null,
@@ -266,18 +266,35 @@ export default function CreatePage() {
             </div>
           )}
 
-          <div className="border-t pt-6">
-            <Textarea
-              label="Summary (notes/quotes) *"
-              value={formData.summary}
-              onChange={(e: any) => setFormData({ ...formData, summary: e.target.value })}
-              placeholder="Write a summary, notes, quotes, or anything that will help you remember this..."
-              rows={4}
-              required
-            />
-            <p className="text-xs text-gray-600 mt-1">
-              This is the only required field. Add whatever helps you remember - summary, notes, quotes, key ideas, etc.
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 border-t pt-6">
+            <p className="text-sm font-medium text-amber-900 mb-2">💡 Reflection questions (required)</p>
+            <p className="text-xs text-amber-800 mb-4">
+              Answer these to lock in what you learned.
             </p>
+            {(() => {
+              const q = getLogQuestions(formData.contentType)
+              return (
+                <>
+                  <Textarea
+                    label={`${q.q1} *`}
+                    value={formData.keyPoints}
+                    onChange={(e: any) => setFormData({ ...formData, keyPoints: e.target.value })}
+                    placeholder={q.q1}
+                    rows={4}
+                    required
+                  />
+                  <Textarea
+                    label={`${q.q2} *`}
+                    value={formData.practicalApplication}
+                    onChange={(e: any) => setFormData({ ...formData, practicalApplication: e.target.value })}
+                    placeholder={q.q2}
+                    rows={3}
+                    className="mt-4"
+                    required
+                  />
+                </>
+              )
+            })()}
           </div>
 
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
@@ -292,39 +309,30 @@ export default function CreatePage() {
             </div>
           </div>
 
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="text-sm font-medium text-amber-900 mb-2">💡 Optional but Recommended</p>
-            <p className="text-xs text-amber-800 mb-4">
-              Research shows that answering these questions helps you retain information longer, but they're optional.
+          <div className="border-t pt-6">
+            <p className="text-sm font-medium text-gray-800 mb-2">Optional</p>
+            <Textarea
+              label="Summary (notes/quotes)"
+              value={formData.summary}
+              onChange={(e: any) => setFormData({ ...formData, summary: e.target.value })}
+              placeholder="Write a summary, notes, quotes, or anything that will help you remember this..."
+              rows={4}
+            />
+            <p className="text-xs text-gray-600 mt-1">
+              Put anything you want to remember yourself here.
             </p>
             {(() => {
               const q = getLogQuestions(formData.contentType)
               return (
-                <>
-                  <Textarea
-                    label={q.q1}
-                    value={formData.keyPoints}
-                    onChange={(e: any) => setFormData({ ...formData, keyPoints: e.target.value })}
-                    placeholder={q.q1}
-                    rows={4}
-                  />
-                  <Textarea
-                    label={q.q2}
-                    value={formData.practicalApplication}
-                    onChange={(e: any) => setFormData({ ...formData, practicalApplication: e.target.value })}
-                    placeholder={q.q2}
-                    rows={3}
-                    className="mt-4"
-                  />
+                <div className="mt-4">
                   <Textarea
                     label={`${q.q3} (optional)`}
                     value={formData.optionalApplication}
                     onChange={(e: any) => setFormData({ ...formData, optionalApplication: e.target.value })}
                     placeholder={q.q3}
                     rows={3}
-                    className="mt-4"
                   />
-                </>
+                </div>
               )
             })()}
           </div>

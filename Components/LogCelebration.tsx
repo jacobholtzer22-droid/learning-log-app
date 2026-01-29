@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import confetti from 'canvas-confetti'
 
 function Button({ children, onClick, className = '' }: { children: React.ReactNode; onClick: () => void; className?: string }) {
   return (
@@ -32,36 +31,38 @@ export function LogCelebration({
     const end = Date.now() + duration
     const colors = ['#84cc16', '#a3e635', '#fbbf24', '#f59e0b', '#22c55e']
 
-    const frame = () => {
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors,
-      })
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors,
-      })
-      if (Date.now() < end) {
-        requestAnimationFrame(frame)
+    void import('canvas-confetti').then(({ default: confetti }) => {
+      const frame = () => {
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors,
+        })
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors,
+        })
+        if (Date.now() < end) {
+          requestAnimationFrame(frame)
+        }
       }
-    }
-    frame()
+      frame()
 
-    // Big center burst
-    setTimeout(() => {
-      confetti({
-        particleCount: 80,
-        spread: 100,
-        origin: { y: 0.6 },
-        colors,
-      })
-    }, 200)
+      // Big center burst
+      setTimeout(() => {
+        confetti({
+          particleCount: 80,
+          spread: 100,
+          origin: { y: 0.6 },
+          colors,
+        })
+      }, 200)
+    })
   }, [])
 
   return (
