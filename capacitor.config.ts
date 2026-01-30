@@ -1,9 +1,12 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.learninglog.app',
   appName: 'learning-log-app',
-  webDir: 'public'
+  server: {
+    url: 'https://learning-log-app.vercel.app',
+    cleartext: true,
+  },
 };
 
 export default config;

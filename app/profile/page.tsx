@@ -96,7 +96,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 pt-[env(safe-area-inset-top,0px)]">
         <Spinner size="lg" />
         <p className="mt-4 text-amber-700">Loading...</p>
       </div>
@@ -105,7 +105,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
+      <div className="pb-20 max-w-2xl mx-auto px-4 safe-area-top pb-6">
         <div className="flex items-center gap-3 mb-6">
           <Image
             src={LOGO_URL}

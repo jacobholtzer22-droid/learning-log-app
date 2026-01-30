@@ -151,7 +151,7 @@ export default function CreatePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
+      <div className="pb-20 max-w-2xl mx-auto px-4 safe-area-top pb-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-amber-800 mb-2">Create Learning Log</h1>
           <p className="text-sm text-gray-600">

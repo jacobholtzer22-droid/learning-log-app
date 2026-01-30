@@ -192,7 +192,7 @@ export default function NotificationsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 pb-20">
-        <div className="max-w-2xl mx-auto px-4 py-6">
+        <div className="max-w-2xl mx-auto px-4 safe-area-top pb-6">
           <BackButton />
           <div className="flex flex-col items-center justify-center py-12">
             <Spinner size="lg" />
@@ -205,7 +205,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <div className="max-w-2xl mx-auto px-4 py-6">
+      <div className="max-w-2xl mx-auto px-4 safe-area-top pb-6">
         <BackButton />
         <h1 className="text-2xl font-bold text-amber-800 mb-6">Notifications</h1>
 

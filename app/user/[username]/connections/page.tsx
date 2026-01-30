@@ -97,7 +97,7 @@ export default async function UserConnectionsPage({ params }: { params: Promise<
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <div className="max-w-2xl mx-auto px-4 py-6">
+      <div className="max-w-2xl mx-auto px-4 safe-area-top pb-6">
         <BackButton />
         
         <div className="mb-6">

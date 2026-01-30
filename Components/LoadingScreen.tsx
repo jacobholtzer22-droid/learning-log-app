@@ -3,7 +3,7 @@
 export function LoadingScreen() {
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-lime-100">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-lime-100 pt-[env(safe-area-inset-top,0px)]">
       <div className="flex flex-col items-center">
         {/* Animated rolling logs */}
         <div className="relative h-40 w-40 flex flex-col justify-end items-center">

@@ -76,7 +76,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-lime-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-lime-50 px-4 pt-[env(safe-area-inset-top,0px)]">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="flex justify-center mb-4">

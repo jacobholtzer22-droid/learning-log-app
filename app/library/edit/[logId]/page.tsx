@@ -181,7 +181,7 @@ export default function EditLogPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-[env(safe-area-inset-top,0px)]">
         <Spinner />
       </div>
     )
@@ -189,7 +189,7 @@ export default function EditLogPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
+      <div className="pb-20 max-w-2xl mx-auto px-4 safe-area-top pb-6">
         <h1 className="text-2xl font-bold text-amber-800 mb-6">Edit Learning Log</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-lime-200 shadow-sm">
