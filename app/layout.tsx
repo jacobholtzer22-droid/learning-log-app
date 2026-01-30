@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ToastProvider } from '../Components/Toast'
 import { LoadingProvider } from '../Components/LoadingProvider'
+import { LOGO_URL } from '../Lib/logo'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,8 +33,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="apple-touch-icon" href="/logo.png" />
-        <link rel="icon" href="/logo.png" />
+        <link rel="apple-touch-icon" href={LOGO_URL} />
+        <link rel="icon" href={LOGO_URL} />
       </head>
       <body className={`${inter.className} bg-gray-50`}>
         <ToastProvider>

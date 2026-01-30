@@ -5,6 +5,7 @@ import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { LOGO_URL } from '../../Lib/logo'
 import { BottomNav } from '../../Components/BottomNav'
 import { Spinner } from '../../Components/Spinner'
 import { useToast } from '../../Components/Toast'
@@ -107,7 +108,7 @@ export default function ProfilePage() {
       <div className="pb-20 max-w-2xl mx-auto px-4 py-6">
         <div className="flex items-center gap-3 mb-6">
           <Image
-            src="/logo.png"
+            src={LOGO_URL}
             alt="LearningLogs"
             width={40}
             height={40}

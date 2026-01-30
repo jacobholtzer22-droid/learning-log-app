@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { LOGO_URL } from '../../Lib/logo'
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 
@@ -15,7 +16,7 @@ function CheckEmailContent() {
         <div className="text-center">
           <div className="flex justify-center mb-4">
             <Image
-              src="/logo.png"
+              src={LOGO_URL}
               alt="LearningLogs"
               width={100}
               height={100}

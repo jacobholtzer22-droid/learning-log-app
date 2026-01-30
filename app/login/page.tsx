@@ -5,6 +5,7 @@ import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { LOGO_URL } from '../../Lib/logo'
 import { useLoading } from '../../Components/LoadingProvider'
 
 function Button({ children, ...props }: any) {
@@ -80,7 +81,7 @@ export default function LoginPage() {
         <div className="text-center">
           <div className="flex justify-center mb-4">
             <Image
-              src="/logo.png"
+              src={LOGO_URL}
               alt="LearningLogs"
               width={100}
               height={100}
